@@ -1,10 +1,15 @@
 language: node_js
-node_js:
-  - "iojs"
-  - "8"
 notifications:
-  email:
-    -	fabioaugustolp@gmail.com
+  email: fabioaugustolp@gmail.com
+node_js:
+  - "8"
+services:
+  - mongodb
+env:
+  global:
+    - NODE_ENV: test
+addons:
+  sauce_connect: true
 before_install:
   - npm install -g bower@1.3
   - npm install -g grunt-cli@0.1
@@ -12,9 +17,11 @@ before_install:
   - npm install -g protractor@1.5
   - webdriver-manager update
   - bower install
-  before_script:
+before_script:
   - node test/data.js 
   - grunt
   - cd dist
-  script:
+script:
  - karma start config/karma.config.js --single-run --browsers PhantomJS
+ - node server &
+ - protractor config/protractor.js
